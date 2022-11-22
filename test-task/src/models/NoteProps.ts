@@ -1,8 +1,8 @@
 export interface NoteProps {
-  value: Note;
+  value: NoteType;
 }
 
-interface Note {
+export interface NoteType {
   id: number;
   text: string;
   tags: string[];
