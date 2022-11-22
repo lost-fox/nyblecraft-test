@@ -1,3 +1,36 @@
-.App {
-  text-align: center;
+.app-wrapper{
+  .app-title{
+    margin: 20px 0px;
+    text-align: center;
+  }
+  .app-add-task{
+    width: 345px;
+    height: 200px;
+    margin: 0 auto;
+    &__text{
+      display: block;
+      margin: 0 auto;
+      border: 2px solid #687c8a;
+      border-radius: 5px;
+    }
+    &__button{
+      margin-top: 15px;
+      float:right;
+      width: 150px;
+      background-color: rgb(169, 191, 206);
+      line-height: 40px;
+      border-radius: 10px;
+      &:hover{
+        background-color: rgb(146, 166, 179);
+      }
+      &:active{
+        background-color: rgb(119, 135, 146);
+      }
+    }
+  }
+
+  .app-notes{
+    margin: 20px;
+    gap: 20px;
+  }
 }
