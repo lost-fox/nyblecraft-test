@@ -1,5 +1,8 @@
+import React from 'react';
+
 export interface NoteProps {
   value: NoteType;
+  onShow: (e: React.MouseEvent) => void;
 }
 
 export interface NoteType {
