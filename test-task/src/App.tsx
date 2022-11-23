@@ -16,6 +16,7 @@ function App() {
 
   const changeAddNote = () => {
     const noteText: string = addNote;
+    if (!noteText.length) return;
     const tags: string[] = noteText.match(/#\S*/gi) || [];
     const text: string = getTextNote(noteText, tags);
     setCountNode(countNode + 1);
@@ -29,7 +30,6 @@ function App() {
     setAddNote('');
   };
 
-  console.log(state);
   return (
     <div className="app-wrapper">
       <h1 className="app-title">Текстовый редактор</h1>
@@ -48,6 +48,18 @@ function App() {
         <button className="app-add-task__button" onClick={changeAddNote}>
           Добавить
         </button>
+      </div>
+      <div className="app-filters">
+        <h2 className="app-filters__title">Фильтры: </h2>
+        <div className="app-filters__tag flex">
+          {state.allTags.map((tag) => {
+            return (
+              <span className="app-filters__tag-item" key={tag}>
+                {tag}
+              </span>
+            );
+          })}
+        </div>
       </div>
       <div className="app-notes flex">
         {state.notes.map((note) => {
