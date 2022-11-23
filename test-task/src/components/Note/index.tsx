@@ -7,7 +7,7 @@ import deleteImg from '../../assets/icons/delete.png';
 import './style.scss';
 
 export const Note: React.FC<NoteProps> = (props) => {
-  const { value, onShow } = props;
+  const { value, onShow, onDelete } = props;
   const { id, text, tags } = value;
   return (
     <div className="note-wrapper flex">
@@ -31,7 +31,11 @@ export const Note: React.FC<NoteProps> = (props) => {
         <button className="note-buttons__button note-buttons__button--edit">
           <img src={editImg} alt="edit icon" />
         </button>
-        <button className="note-buttons__button note-buttons__button--delete">
+        <button
+          id={id.toString()}
+          className="note-buttons__button note-buttons__button--delete"
+          onClick={onDelete}
+        >
           <img src={deleteImg} alt="delete icon" />
         </button>
       </div>

@@ -40,6 +40,22 @@ function App() {
     setIsOpen(true);
   };
 
+  const deleteNote = (e: React.MouseEvent) => {
+    const id = +(e.currentTarget as HTMLButtonElement).id;
+    const stateNotes = state.notes;
+    const stateAllTags = state.allTags;
+    const newStateNotes = stateNotes.filter((note) => {
+      return note.id !== id;
+    });
+    const deleteTags = new Set(
+      stateNotes.filter((note) => {
+        return note.id === id;
+      })[0].tags
+    );
+    const newStateAllTags = stateAllTags.filter((tag) => !deleteTags.has(tag));
+    setState({ ...state, notes: newStateNotes, allTags: newStateAllTags });
+  };
+
   const closeModal = (e: React.MouseEvent) => {
     const tag = e.target as HTMLDivElement;
     if (tag.id === 'modal-close') {
@@ -81,7 +97,14 @@ function App() {
         </div>
         <div className="app-notes flex">
           {state.notes.map((note) => {
-            return <NoteComponents key={note.id} value={note} onShow={showInfoNote} />;
+            return (
+              <NoteComponents
+                key={note.id}
+                value={note}
+                onShow={showInfoNote}
+                onDelete={deleteNote}
+              />
+            );
           })}
         </div>
       </div>

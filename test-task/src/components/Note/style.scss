@@ -62,6 +62,9 @@
          &--delete:hover{
             background-color: rgb(248, 177, 177);
          }
+         &--delete:active{
+            background-color: rgb(253, 74, 74);
+         }
       }
    }
 }
