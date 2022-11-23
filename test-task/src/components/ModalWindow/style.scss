@@ -10,7 +10,7 @@
    background-color: rgb(0,0,0); 
    background-color: rgba(0,0,0,0.4); 
 
-   .modal-container{
+   &-container{
       position: relative;
       background-color: #fefefe;
       margin: 3% auto;
@@ -29,17 +29,54 @@
       background-color: #fefefe;
    }
 
-   .modal-text{
+   &-text{
       margin: 20px;
       margin-top: 40px;
    }
 
-   .modal-hr{
+   &-hr{
       width: 80%;
    }
 
-   .modal-tags{
+   &-tags{
       margin: 20px;
       line-height: 18px;
+      justify-content: flex-start;
+      &__button{
+         margin-left: -5px;
+         cursor: pointer;
+         &::after{
+           content: '✘'; 
+         }
+      }
+   }
+
+   &-textarea{
+      display: block;
+      min-height: 140px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 2px solid #687c8a;
+      border-radius: 5px;
+      &__text{
+         padding: 0px 20px;
+         min-height: 80px;
+         font-size: 24px;
+      }
+   }
+
+   &-button{
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+      background-color: rgb(170, 206, 169);
+      line-height: 40px;
+      border-radius: 10px;
+      &:hover{
+        background-color: rgb(146, 179, 149);
+      }
+      &:active{
+        background-color: rgb(119, 146, 124);
+      }
    }
 }

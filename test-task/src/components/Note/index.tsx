@@ -25,10 +25,16 @@ export const Note: React.FC<NoteProps> = (props) => {
           id={id.toString()}
           className="note-buttons__button note-buttons__button--show"
           onClick={onShow}
+          name="show"
         >
           <img src={showImg} alt="show icon" />
         </button>
-        <button className="note-buttons__button note-buttons__button--edit">
+        <button
+          id={id.toString()}
+          className="note-buttons__button note-buttons__button--edit"
+          onClick={onShow}
+          name="edit"
+        >
           <img src={editImg} alt="edit icon" />
         </button>
         <button

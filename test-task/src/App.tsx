@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { ModalPortal } from './components/ModalPortal';
 import { ModalWindow } from './components/ModalWindow';
@@ -6,6 +6,7 @@ import { Note as NoteComponents } from './components/Note';
 import { AppState } from './models/AppState';
 import { NoteType } from './models/NoteProps';
 import { getTextNote } from './utils/getTextNote';
+import { moveCaretToEnd } from './utils/moveCaretToEnd';
 import { setUniqueTags } from './utils/setUniqueTags';
 
 function App() {
@@ -13,10 +14,21 @@ function App() {
     notes: [],
     allTags: [],
   });
+  const editInitial: NoteType = {
+    id: 0,
+    text: '',
+    tags: [],
+  };
   const [addNote, setAddNote] = useState<string>('');
   const [countNode, setCountNode] = useState<number>(1);
+  const [editNote, setEditNote] = useState<NoteType>(editInitial);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [idNote, setIdNote] = useState<string>('');
+  const [isButtonClick, setIsButtonClick] = useState<string>('');
+
+  useEffect(() => {
+    setEditNote(state.notes[+idNote - 1]);
+  }, [idNote]);
 
   const changeAddNote = () => {
     const noteText: string = addNote;
@@ -36,6 +48,7 @@ function App() {
 
   const showInfoNote = (e: React.MouseEvent) => {
     const id = (e.currentTarget as HTMLButtonElement).id;
+    setIsButtonClick((e.currentTarget as HTMLButtonElement).name);
     setIdNote(id);
     setIsOpen(true);
   };
@@ -56,10 +69,51 @@ function App() {
     setState({ ...state, notes: newStateNotes, allTags: newStateAllTags });
   };
 
+  const getEditNote = (e: React.KeyboardEvent) => {
+    moveCaretToEnd((e.target as HTMLDivElement).children[0]);
+    const text = (e.target as HTMLDivElement).children[0].textContent || '';
+    const tags: string[] =
+      (e.target as HTMLDivElement).children[2].textContent?.split('#').join(' #').split(' ') || [];
+    tags.shift();
+    let textTags: string[] = [];
+    let newText = text;
+    if (text.slice(-1).charCodeAt(0) === 160) {
+      textTags = text.match(/#\S*/gi) || [];
+      newText = getTextNote(text, textTags);
+    }
+    const newTags = setUniqueTags(textTags, tags);
+    const data: NoteType = {
+      id: +idNote,
+      text: newText,
+      tags: newTags,
+    };
+    setEditNote(data);
+  };
+
+  const getEditTags = (e: React.MouseEvent) => {
+    const deleteTag = (e.target as HTMLButtonElement).id;
+    const tags = editNote.tags.filter((el) => {
+      return el !== deleteTag;
+    });
+    setEditNote({ ...editNote, tags: tags });
+  };
+
+  const saveNote = () => {
+    const data = editNote;
+    const stateNotes: NoteType[] = state.notes.map((el) => (el.id === +idNote ? data : el));
+    const getAllTags = setUniqueTags(data.tags, state.allTags);
+    setState({ ...state, notes: stateNotes, allTags: getAllTags });
+    setIdNote('');
+    setIsOpen(false);
+    setEditNote(editInitial);
+  };
+
   const closeModal = (e: React.MouseEvent) => {
     const tag = e.target as HTMLDivElement;
     if (tag.id === 'modal-close') {
       setIsOpen(false);
+      setIdNote('');
+      setEditNote(editInitial);
     }
   };
 
@@ -110,7 +164,15 @@ function App() {
       </div>
       {isOpen && (
         <ModalPortal>
-          <ModalWindow close={closeModal} data={state.notes[+idNote - 1]} />
+          <ModalWindow
+            close={closeModal}
+            data={state.notes[+idNote - 1]}
+            buttonClick={isButtonClick}
+            edit={getEditNote}
+            save={saveNote}
+            editNote={editNote}
+            editTags={getEditTags}
+          />
         </ModalPortal>
       )}
     </>
