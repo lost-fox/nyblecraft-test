@@ -100,8 +100,9 @@ function App() {
   const saveNote = () => {
     const data = editNote;
     const stateNotes: NoteType[] = state.notes.map((el) => (el.id === +idNote ? data : el));
-    const getAllTags = setUniqueTags(data.tags, state.allTags);
-    setState({ ...state, notes: stateNotes, allTags: getAllTags });
+    const newStateAllTags = getAllTags(stateNotes);
+    setState({ ...state, allTags: newStateAllTags });
+    setState({ ...state, notes: stateNotes, allTags: newStateAllTags });
     setFiltersNote(stateNotes);
     setIdNote('');
     setIsOpen(false);
