@@ -29,10 +29,6 @@ function App() {
   const [filtersNote, setFiltersNote] = useState<NoteType[]>(state.notes);
   const [filterItem, setFilterItem] = useState<string[]>([]);
 
-  useEffect(() => {
-    setEditNote(state.notes[+idNote - 1]);
-  }, [idNote]);
-
   const changeAddNote = () => {
     const noteText: string = addNote;
     if (!noteText.length) return;
@@ -52,7 +48,13 @@ function App() {
 
   const showInfoNote = (e: React.MouseEvent) => {
     const id = (e.currentTarget as HTMLButtonElement).id;
+    let data: NoteType = editInitial;
+    console.log(state.notes);
+    for (let i = 0; i < state.notes.length; i++) {
+      if (state.notes[i].id === +id) data = state.notes[i];
+    }
     setIsButtonClick((e.currentTarget as HTMLButtonElement).name);
+    setEditNote(data);
     setIdNote(id);
     setIsOpen(true);
   };
@@ -66,6 +68,7 @@ function App() {
     const newStateAllTags = getAllTags(newStateNotes);
     setState({ ...state, notes: newStateNotes, allTags: newStateAllTags });
     setFiltersNote(newStateNotes);
+    setIdNote('');
   };
 
   const getEditNote = (e: React.KeyboardEvent) => {
@@ -196,7 +199,6 @@ function App() {
         <ModalPortal>
           <ModalWindow
             close={closeModal}
-            data={state.notes[+idNote - 1]}
             buttonClick={isButtonClick}
             edit={getEditNote}
             save={saveNote}

@@ -1,8 +1,7 @@
 import { NoteType } from './NoteProps';
 
 export interface ModalWindowProps {
-  data?: NoteType;
-  editNote?: NoteType;
+  editNote: NoteType;
   buttonClick: string;
   close?: (e: React.MouseEvent) => void;
   save?: () => void;
