@@ -121,28 +121,20 @@ function App() {
     const value: string = (e.target as HTMLSpanElement).textContent || '';
     const notes = state.notes;
     let filter = filterItem;
-    const filterNotes: NoteType[] = [];
+    // const filterNotes: NoteType[] = [];
     const isFilter = filter.some((elem) => elem === value);
     if (isFilter) {
       filter.splice(filter.indexOf(value), 1);
     } else {
       filter = [...filter, value];
     }
-    for (let i = 0; i <= filter.length; i++) {
-      for (let j = 0; j <= notes.length; j++) {
-        if (notes[j]?.tags.some((el) => el === filter[i])) {
-          filterNotes.push(notes[j]);
-        }
-      }
-    }
+    const isNotes = notes.map((note) => {
+      return filter.every((e) => note.tags.includes(e));
+    });
 
-    for (let i = 0; i <= filterNotes.length; i++) {
-      for (let j = i + 1; j < filterNotes.length; j++) {
-        if (filterNotes[i].id === filterNotes[j].id) {
-          filterNotes.splice(j, 1);
-        }
-      }
-    }
+    const filterNotes = notes.filter((note, index) => {
+      if (isNotes[index]) return note;
+    });
 
     setFilterItem(filter);
     if (!filter.length) {
