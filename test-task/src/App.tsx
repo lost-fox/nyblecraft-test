@@ -176,25 +176,14 @@ function App() {
           <h2 className="app-filters__title">Фильтры: </h2>
           <div className="app-filters__tag flex">
             {state.allTags.map((tag) => {
-              for (let i = 0; i <= filterItem.length; i++) {
-                if (tag === filterItem[i]) {
-                  return (
-                    <span
-                      className=" app-filters__tag-item app-filters__tag-item--active"
-                      key={tag}
-                      onClick={getFiltersTag}
-                    >
-                      {tag}
-                    </span>
-                  );
-                } else {
-                  return (
-                    <span className="app-filters__tag-item" key={tag} onClick={getFiltersTag}>
-                      {tag}
-                    </span>
-                  );
-                }
-              }
+              const className = filterItem.some((el) => el === tag)
+                ? 'app-filters__tag-item app-filters__tag-item--active'
+                : 'app-filters__tag-item';
+              return (
+                <span className={className} key={tag} onClick={getFiltersTag}>
+                  {tag}
+                </span>
+              );
             })}
           </div>
         </div>
