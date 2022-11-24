@@ -49,7 +49,6 @@ function App() {
   const showInfoNote = (e: React.MouseEvent) => {
     const id = (e.currentTarget as HTMLButtonElement).id;
     let data: NoteType = editInitial;
-    console.log(state.notes);
     for (let i = 0; i < state.notes.length; i++) {
       if (state.notes[i].id === +id) data = state.notes[i];
     }
