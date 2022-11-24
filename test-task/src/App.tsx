@@ -121,7 +121,6 @@ function App() {
     const value: string = (e.target as HTMLSpanElement).textContent || '';
     const notes = state.notes;
     let filter = filterItem;
-    // const filterNotes: NoteType[] = [];
     const isFilter = filter.some((elem) => elem === value);
     if (isFilter) {
       filter.splice(filter.indexOf(value), 1);
