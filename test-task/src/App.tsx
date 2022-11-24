@@ -25,6 +25,8 @@ function App() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [idNote, setIdNote] = useState<string>('');
   const [isButtonClick, setIsButtonClick] = useState<string>('');
+  const [filtersNote, setFiltersNote] = useState<NoteType[]>(state.notes);
+  const [filterItem, setFilterItem] = useState<string[]>([]);
 
   useEffect(() => {
     setEditNote(state.notes[+idNote - 1]);
@@ -44,6 +46,7 @@ function App() {
     const getAllTags = setUniqueTags(tags, state.allTags);
     setState({ ...state, notes: [...state.notes, data], allTags: getAllTags });
     setAddNote('');
+    setFiltersNote([...state.notes, data]);
   };
 
   const showInfoNote = (e: React.MouseEvent) => {
@@ -67,6 +70,7 @@ function App() {
     );
     const newStateAllTags = stateAllTags.filter((tag) => !deleteTags.has(tag));
     setState({ ...state, notes: newStateNotes, allTags: newStateAllTags });
+    setFiltersNote(newStateNotes);
   };
 
   const getEditNote = (e: React.KeyboardEvent) => {
@@ -103,6 +107,7 @@ function App() {
     const stateNotes: NoteType[] = state.notes.map((el) => (el.id === +idNote ? data : el));
     const getAllTags = setUniqueTags(data.tags, state.allTags);
     setState({ ...state, notes: stateNotes, allTags: getAllTags });
+    setFiltersNote(stateNotes);
     setIdNote('');
     setIsOpen(false);
     setEditNote(editInitial);
@@ -115,6 +120,41 @@ function App() {
       setIdNote('');
       setEditNote(editInitial);
     }
+  };
+
+  const getFiltersTag = (e: React.MouseEvent) => {
+    const value: string = (e.target as HTMLSpanElement).textContent || '';
+    const notes = state.notes;
+    let filter = filterItem;
+    const filterNotes: NoteType[] = [];
+    const isFilter = filter.some((elem) => elem === value);
+    if (isFilter) {
+      filter.splice(filter.indexOf(value), 1);
+    } else {
+      filter = [...filter, value];
+    }
+    for (let i = 0; i <= filter.length; i++) {
+      for (let j = 0; j <= notes.length; j++) {
+        if (notes[j]?.tags.some((el) => el === filter[i])) {
+          filterNotes.push(notes[j]);
+        }
+      }
+    }
+
+    for (let i = 0; i <= filterNotes.length; i++) {
+      for (let j = i + 1; j < filterNotes.length; j++) {
+        if (filterNotes[i].id === filterNotes[j].id) {
+          filterNotes.splice(j, 1);
+        }
+      }
+    }
+
+    setFilterItem(filter);
+    if (!filter.length) {
+      setFiltersNote(state.notes);
+      return;
+    }
+    setFiltersNote(filterNotes);
   };
 
   return (
@@ -141,16 +181,30 @@ function App() {
           <h2 className="app-filters__title">Фильтры: </h2>
           <div className="app-filters__tag flex">
             {state.allTags.map((tag) => {
-              return (
-                <span className="app-filters__tag-item" key={tag}>
-                  {tag}
-                </span>
-              );
+              for (let i = 0; i <= filterItem.length; i++) {
+                if (tag === filterItem[i]) {
+                  return (
+                    <span
+                      className=" app-filters__tag-item app-filters__tag-item--active"
+                      key={tag}
+                      onClick={getFiltersTag}
+                    >
+                      {tag}
+                    </span>
+                  );
+                } else {
+                  return (
+                    <span className="app-filters__tag-item" key={tag} onClick={getFiltersTag}>
+                      {tag}
+                    </span>
+                  );
+                }
+              }
             })}
           </div>
         </div>
         <div className="app-notes flex">
-          {state.notes.map((note) => {
+          {filtersNote.map((note) => {
             return (
               <NoteComponents
                 key={note.id}
