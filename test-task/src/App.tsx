@@ -5,6 +5,7 @@ import { ModalWindow } from './components/ModalWindow';
 import { Note as NoteComponents } from './components/Note';
 import { AppState } from './models/AppState';
 import { NoteType } from './models/NoteProps';
+import { getAllTags } from './utils/getAllTags';
 import { getTextNote } from './utils/getTextNote';
 import { moveCaretToEnd } from './utils/moveCaretToEnd';
 import { setUniqueTags } from './utils/setUniqueTags';
@@ -59,16 +60,10 @@ function App() {
   const deleteNote = (e: React.MouseEvent) => {
     const id = +(e.currentTarget as HTMLButtonElement).id;
     const stateNotes = state.notes;
-    const stateAllTags = state.allTags;
     const newStateNotes = stateNotes.filter((note) => {
       return note.id !== id;
     });
-    const deleteTags = new Set(
-      stateNotes.filter((note) => {
-        return note.id === id;
-      })[0].tags
-    );
-    const newStateAllTags = stateAllTags.filter((tag) => !deleteTags.has(tag));
+    const newStateAllTags = getAllTags(newStateNotes);
     setState({ ...state, notes: newStateNotes, allTags: newStateAllTags });
     setFiltersNote(newStateNotes);
   };
